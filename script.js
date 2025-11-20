@@ -389,9 +389,9 @@ function showResults(exams, schedule, currentDay, meta, capacityPerDay){
     showResults(chosen.payload.exams, chosen.payload.schedule, $("currentDay") ? $("currentDay").value : "LU", chosen.payload.meta, chosen.payload.meta.capacityPerDay || {})
   }
   const result = $("results")
-  if(results) {
+  if(result) {
     controls.appendChild(saveBtn); controls.appendChild(listBtn)
-    results.prepend(controls)
+    result.prepend(controls)
   }
 }
 
