@@ -45,38 +45,44 @@
                 </div>
             </div>
 
-            <!-- Actividades diarias -->
-            <div class="form-section">
-                <h2>🕐 Actividades Diarias Fijas</h2>
-                <p class="help-text">Ingresa las horas totales y además los rangos horarios (los rangos se aplican a todos los días)</p>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="transportHours">Horas de transporte (total diario):</label>
-                        <input type="number" id="transportHours" min="0" max="8" step="0.5" value="2" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="transportSlots">Rangos de transporte (ej: 7-8,17-18):</label>
-                        <input type="text" id="transportSlots" placeholder="7-8,17-18">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="mealHours">Horas de comida (total diario):</label>
-                        <input type="number" id="mealHours" min="0" max="8" step="0.5" value="2" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="mealSlots">Rangos de comida (ej: 12-13,20-20.5):</label>
-                        <input type="text" id="mealSlots" placeholder="12-13,20-20.5">
-                    </div>
-                </div>
+           <!-- Actividades diarias -->
+          <div class="form-section">
+              <h2>🕐 Actividades Diarias</h2>
+              <p class="help-text">Ingresa un rango de horas para permitir variaciones en la simulación (ej: 6-8)</p>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="restHours">Horas de descanso (diario):</label>
-                        <input type="number" id="restHours" min="0" max="12" step="0.5" value="8" required>
-                    </div>
-                </div>
-            </div>
+              <!-- Transporte -->
+              <div class="form-row">
+                  <div class="form-group">
+                      <label for="transportHoursRange">Rango de horas de transporte:</label>
+                      <input type="text" id="transportHoursRange" placeholder="2-3" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="transportSlots">Rangos horarios (ej: 7-8,17-18):</label>
+                      <input type="text" id="transportSlots" placeholder="7-8,17-18">
+                  </div>
+              </div>
+
+              <!-- Comidas -->
+              <div class="form-row">
+                  <div class="form-group">
+                      <label for="mealHoursRange">Rango de horas de comida:</label>
+                      <input type="text" id="mealHoursRange" placeholder="1-2" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="mealSlots">Rangos de comida (ej: 12-13,20-20.5):</label>
+                      <input type="text" id="mealSlots" placeholder="12-13,20-20.5">
+                  </div>
+              </div>
+
+              <!-- Descanso -->
+              <div class="form-row">
+                  <div class="form-group">
+                      <label for="restHoursRange">Rango de horas de descanso:</label>
+                      <input type="text" id="restHoursRange" placeholder="6-8" required>
+                  </div>
+              </div>
+          </div>
+
 
             <!-- Horarios de clases -->
             <div class="form-section">
