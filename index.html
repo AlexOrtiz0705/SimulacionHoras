@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Horas de Estudio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container hidden" id="contenedor">
+        <header>
+            <h1>📚 Simulador de Horas de Estudio</h1>
+            <p>Optimiza tu tiempo de estudio para tus exámenes</p>
+        </header>
+
+        <form id="studyForm">
+            <!-- Día actual -->
+            <div class="form-section">
+                <h2>📅 Día Actual</h2>
+                <div class="form-group">
+                    <label for="currentDay">Día de la semana:</label>
+                    <select id="currentDay" required>
+                        <option value="LU">Lunes</option>
+                        <option value="MA">Martes</option>
+                        <option value="MI">Miércoles</option>
+                        <option value="JU">Jueves</option>
+                        <option value="VI">Viernes</option>
+                        <option value="SA">Sábado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Horario diario disponible -->
+            <div class="form-section">
+                <h2>⏰ Horario Diario Disponible</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startTime">Hora inicio:</label>
+                        <input type="time" id="startTime" value="06:00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endTime">Hora fin:</label>
+                        <input type="time" id="endTime" value="22:00" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actividades diarias -->
+            <div class="form-section">
+                <h2>🕐 Actividades Diarias Fijas</h2>
+                <p class="help-text">Ingresa las horas totales y además los rangos horarios (los rangos se aplican a todos los días)</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="transportHours">Horas de transporte (total diario):</label>
+                        <input type="number" id="transportHours" min="0" max="8" step="0.5" value="2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transportSlots">Rangos de transporte (ej: 7-8,17-18):</label>
+                        <input type="text" id="transportSlots" placeholder="7-8,17-18">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mealHours">Horas de comida (total diario):</label>
+                        <input type="number" id="mealHours" min="0" max="8" step="0.5" value="2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mealSlots">Rangos de comida (ej: 12-13,20-20.5):</label>
+                        <input type="text" id="mealSlots" placeholder="12-13,20-20.5">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="restHours">Horas de descanso (diario):</label>
+                        <input type="number" id="restHours" min="0" max="12" step="0.5" value="8" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Horarios de clases -->
+            <div class="form-section">
+                <h2>🏫 Horarios de Clases</h2>
+                <p class="help-text">Ingresa los horarios en formato 24h (ej: 8-10,14-16). Deja en blanco si no hay clases.</p>
+                <div class="class-schedule">
+                    <div class="form-group">
+                        <label for="classLU">Lunes:</label>
+                        <input type="text" id="classLU" placeholder="8-10,14-16">
+                    </div>
+                    <div class="form-group">
+                        <label for="classMA">Martes:</label>
+                        <input type="text" id="classMA" placeholder="8-10,14-16">
+                    </div>
+                    <div class="form-group">
+                        <label for="classMI">Miércoles:</label>
+                        <input type="text" id="classMI" placeholder="8-10,14-16">
+                    </div>
+                    <div class="form-group">
+                        <label for="classJU">Jueves:</label>
+                        <input type="text" id="classJU" placeholder="8-10,14-16">
+                    </div>
+                    <div class="form-group">
+                        <label for="classVI">Viernes:</label>
+                        <input type="text" id="classVI" placeholder="8-10,14-16">
+                    </div>
+                    <div class="form-group">
+                        <label for="classSA">Sábado:</label>
+                        <input type="text" id="classSA" placeholder="8-10">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exámenes -->
+            <div class="form-section">
+                <h2>📝 Exámenes</h2>
+                <div class="form-group">
+                    <label for="numExams">Número de exámenes:</label>
+                    <input type="number" id="numExams" min="1" max="10" value="3" required>
+                </div>
+                <button type="button" id="generateExamsBtn" class="btn-secondary">Generar campos de exámenes</button>
+                <div id="examsContainer"></div>
+            </div>
+
+            <button type="submit" class="btn-primary" onclick="generarHorario()">🚀 Generar Horario</button>
+        </form>
+
+        
+        
+    </div>
+
+            <div id="results" class="results container hidden">
+                <h2>📊 Resultado del Plan de Estudio</h2>
+                <div id="summary"></div>
+                <div id="schedule"></div>
+                <div id="btnRegresar" onclick="regresar()">⬅ Regresar</div>
+            </div>
+
+    
+  <div id="container2" class="container">
+
+    <header>
+      <h1>Cómo usar el Simulador de Horas de Estudio</h1>
+      <p>Guía completa para ingresar tus datos y generar tu horario recomendado.</p>
+    </header>
+
+    <section style="padding: 30px;">
+
+      <h2 style="margin-bottom: 20px; font-size: 1.8rem;">📘 Introducción</h2>
+      <p style="line-height: 1.7; margin-bottom: 20px; color: aliceblue;">
+        Este simulador te ayuda a calcular cuántas horas debes estudiar para cada examen, distribuidas
+        equitativamente según la dificultad, los días disponibles antes del examen, tus clases, horas de transporte,
+        tiempo para comer y descansar.  
+        Finalmente genera un <strong>horario de estudio personalizado</strong>.
+      </p>
+
+      <!-- PASO 1 -->
+      <div class="form-section" style="margin-bottom: 40px;">
+        <h2>1️⃣ Información general</h2>
+        <p class="help-text">
+          En esta sección deberás ingresar:
+        </p>
+        <ul style="margin-left: 20px; line-height: 1.7;">
+          <li>📅 <strong>Día en el que te encuentras actualmente</strong> (LU, MA, MI, JU, VI, SA)</li>
+          <li>📘 <strong>Cantidad de exámenes</strong> que tendrás</li>
+          <li>🎓 <strong>Cantidad de clases</strong> de la semana</li>
+        </ul>
+      </div>
+
+      <!-- PASO 2 -->
+      <div class="form-section" style="margin-bottom: 40px;">
+        <h2>2️⃣ Ingreso del horario de clases</h2>
+        <p class="help-text">Aquí registrarás tus clases de lunes a sábado.</p>
+        <ul style="margin-left: 20px; line-height: 1.7;">
+          <li>🕒 Hora de inicio y fin de cada clase</li>
+          <li>📅 Selecciona los días correspondientes (LU a SA)</li>
+          <li>Puedes agregar todas las clases necesarias</li>
+        </ul>
+      </div>
+
+      <!-- PASO 3 -->
+      <div class="form-section" style="margin-bottom: 40px;">
+        <h2>3️⃣ Exámenes y dificultad</h2>
+        <p class="help-text">Para cada examen ingresa:</p>
+
+        <ul style="margin-left: 20px; line-height: 1.7;">
+          <li>🧪 <strong>Nombre del examen</strong></li>
+          <li>🎚️ <strong>Dificultad</strong>:  
+            <ul style="margin-left: 15px;">
+              <li>1 = Fácil → 2 horas totales</li>
+              <li>2 = Medio → 6 horas totales</li>
+              <li>3 = Difícil → 10 horas totales</li>
+            </ul>
+          </li>
+          <li>📆 <strong>Días antes del examen</strong> para estudiar</li>
+        </ul>
+      </div>
+
+      <!-- PASO 4 -->
+      <div class="form-section" style="margin-bottom: 40px;">
+        <h2>4️⃣ Transporte, comidas y descanso</h2>
+        <p class="help-text">Estos tiempos se bloquearán automáticamente en el horario sugerido:</p>
+
+        <ul style="margin-left: 20px; line-height: 1.7;">
+          <li>🚍 Horas en transporte</li>
+          <li>🍽️ Horas para comer</li>
+          <li>😴 Horas de descanso diario</li>
+        </ul>
+      </div>
+
+      <!-- PASO 5 -->
+      <div class="form-section" style="margin-bottom: 40px;">
+        <h2>5️⃣ Generación del horario sugerido</h2>
+        <p class="help-text">El sistema hará lo siguiente:</p>
+
+        <ul style="margin-left: 20px; line-height: 1.7;">
+          <li>📊 Calcular las horas necesarias de estudio según la dificultad</li>
+          <li>📆 Dividir esas horas entre los días disponibles</li>
+          <li>⛔ Bloquear horas de clase, transporte, comida y descanso</li>
+          <li>⏱️ Insertar bloques de estudio equilibrados por día</li>
+          <li>✨ Evitar exceso de horas por día</li>
+        </ul>
+
+        <p style="margin-top: 20px; font-weight: 600;">
+          Finalmente verás:
+        </p>
+
+        <ul style="margin-left: 20px; line-height: 1.7;">
+          <li>📘 Las horas diarias que debes estudiar por examen</li>
+          <li>📅 Tu horario sugerido, organizado por días</li>
+        </ul>
+      </div>
+
+      <button id="btnRegresar" onclick="regresar()">
+        ⬅ Volver al simulador
+      </button>
+
+    </section>
+  </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
