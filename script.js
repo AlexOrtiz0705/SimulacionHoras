@@ -485,6 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Botón que ya tienes en la guía
     const btnGuiRegresar = document.getElementById("btnGuiRegresar");
     if (btnGuiRegresar) {
+
         btnGuiRegresar.addEventListener("click", () => showScreen("contenedor"));
     }
 
@@ -493,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (form) {
         form.addEventListener("submit", e => {
             e.preventDefault();
-            onGenerate();   // tu función de generación
+            generateSchedule();   // tu función de generación
             showScreen("results");
         });
     }
