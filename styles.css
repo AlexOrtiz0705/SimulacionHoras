@@ -4,10 +4,6 @@
   box-sizing: border-box;
 }
 
-.hidden {
-    display: none !important;
-}
-
 :root {
   --primary-color: #6366f1;
   --secondary-color: #8b5cf6;

@@ -457,48 +457,6 @@ const regresar = () =>{
   document.getElementById("container2").classList.add("hidden");
 }
 
-function showScreen(screenId) {
-    const screens = ["container2", "contenedor", "results"];
-
-    screens.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.classList.add("hidden");
-        }
-    });
-
-    const target = document.getElementById(screenId);
-    if (target) {
-        target.classList.remove("hidden");
-    }
-}
-
-// Botones de navegación
-function regresar() {
-    showScreen("contenedor");
-}
-
-// Cuando carga la página → mostrar guía primero
-document.addEventListener("DOMContentLoaded", () => {
-    showScreen("container2");
-
-    // Botón que ya tienes en la guía
-    const btnGuiRegresar = document.getElementById("btnGuiRegresar");
-    if (btnGuiRegresar) {
-
-        btnGuiRegresar.addEventListener("click", () => showScreen("contenedor"));
-    }
-
-    // Cuando se genera el horario → mostrar resultados
-    const form = document.getElementById("studyForm");
-    if (form) {
-        form.addEventListener("submit", e => {
-            e.preventDefault();
-            generateSchedule();   // tu función de generación
-            showScreen("results");
-        });
-    }
-});
 
 // Generar campos de exámenes al cargar (si existe el botón)
 const genBtn = document.getElementById("generateExamsBtn")
