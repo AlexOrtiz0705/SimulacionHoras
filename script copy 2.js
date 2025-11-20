@@ -360,21 +360,6 @@ function showResults(exams, schedule, currentDay, meta, capacityPerDay){
   })
   if(scheduleDiv) scheduleDiv.innerHTML = sh
 
-  // Render calendario visual
-  const calendar = renderCalendar(
-      schedule,
-      classSchedules,      // <-- si no está disponible aquí la pasamos arriba
-      transportSlots,
-      mealSlots,
-      meta.sampledRest,
-      meta.inputSummary.startHour,
-      meta.inputSummary.endHour
-  );
-
-  // limpiar y agregar
-  scheduleDiv.appendChild(calendar);
-
-
   // botones guardar / listar (creados una sola vez)
   if($("scenarioControls")) return
   const controls = document.createElement("div"); controls.id = "scenarioControls"; controls.style.margin = "8px 0"
@@ -415,84 +400,6 @@ function formatTime(hour){
   const h = Math.floor(hour); const m = Math.round((hour - h) * 60)
   return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`
 }
-
-function renderCalendar(schedule, classSchedules, transportSlots, mealSlots, restHours, startHour, endHour) {
-    const container = document.createElement("div");
-    container.className = "calendar-container";
-
-    const hourHeight = 40; // px por hora
-    const totalHours = endHour - startHour;
-
-    const days = ["LU","MA","MI","JU","VI","SA"];
-
-    days.forEach(day => {
-        const dayDiv = document.createElement("div");
-        dayDiv.className = "calendar-day";
-
-        const label = document.createElement("h4");
-        label.textContent = day;
-        dayDiv.appendChild(label);
-
-        const grid = document.createElement("div");
-        grid.className = "calendar-grid";
-        grid.style.height = `${totalHours * hourHeight}px`;
-
-        // líneas de horas
-        for(let h = startHour; h <= endHour; h++){
-            const line = document.createElement("div");
-            line.className = "hour-line";
-            line.style.top = `${(h - startHour) * hourHeight}px`;
-
-            const text = document.createElement("div");
-            text.className = "hour-label";
-            text.style.top = `${(h - startHour) * hourHeight - 6}px`;
-            text.textContent = h + ":00";
-
-            grid.appendChild(line);
-            grid.appendChild(text);
-        }
-
-        // función auxiliar para crear bloques
-        function addSlot(start, end, label, css) {
-            const slot = document.createElement("div");
-            slot.className = "time-slot " + css;
-            slot.style.top = `${(start - startHour) * hourHeight}px`;
-            slot.style.height = `${(end - start) * hourHeight}px`;
-            slot.textContent = label;
-            grid.appendChild(slot);
-        }
-
-        // ---------------- Bloques de clases ----------------
-        (classSchedules[day] || []).forEach(c => {
-            addSlot(c.start, c.end, "Clase", "slot-class");
-        });
-
-        // ---------------- Transporte ----------------
-        transportSlots.forEach(t => {
-            addSlot(t.start, t.end, "Transporte", "slot-transport");
-        });
-
-        // ---------------- Comidas ----------------
-        mealSlots.forEach(m => {
-            addSlot(m.start, m.end, "Comida", "slot-meal");
-        });
-
-        // ---------------- Descanso dividido en noche ----------------
-        const restStart = endHour - restHours;
-        addSlot(restStart, endHour, "Descanso", "slot-rest");
-
-        // ---------------- Estudio (schedule) ----------------
-        (schedule[day] || []).forEach(b => {
-            addSlot(b.start, b.end, b.exam, "slot-study");
-        });
-
-        dayDiv.appendChild(grid);
-        container.appendChild(dayDiv);
-    });
-
-    return container;
-}
-
 
 /* --------------- Inicializar --------------- */
 document.addEventListener("DOMContentLoaded", init)
