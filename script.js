@@ -1,4 +1,13 @@
-const examColors = ["#6366f1","#8b5cf6","#ec4899","#f59e0b","#10b981","#3b82f6","#ef4444","#14b8a6","#f97316","#a855f7"];
+const examColors = ["#6366f1",
+  "#8b5cf6",
+  "#ec4899",
+  "#f59e0b",
+  "#10b981",
+  "#3b82f6",
+  "#ef4444",
+  "#14b8a6",
+  "#f97316",
+  "#a855f7"];
 const daysOfWeek = ["LU","MA","MI","JU","VI","SA"];
 
 // ============= GENERAR CAMPOS DE EXÁMENES =============
@@ -98,38 +107,109 @@ function generateSchedule() {
             });
         }
 
-        // --- Generar horario (versión simplificada pero 100% funcional) ---
+     
+                // --- Generar horario (versión EQUITATIVA y REALISTA) ---
         const schedule = {};
         daysOfWeek.forEach(d => schedule[d] = []);
 
         const currentDayIndex = daysOfWeek.indexOf(currentDay);
 
-        exams.sort((a,b) => a.daysRemaining - b.daysRemaining);
+        // Ordenar exámenes por urgencia (más cercanos primero)
+        exams.sort((a, b) => a.daysRemaining - b.daysRemaining);
 
+        // Para cada examen
         for (const exam of exams) {
-            let remaining = exam.totalHours;
-            const daysToUse = Math.min(exam.daysRemaining, 6);
+            let remainingHours = exam.totalHours;
+            const daysAvailable = Math.min(exam.daysRemaining, 6); // máximo 6 días
+            const hoursPerDayTarget = remainingHours / daysAvailable;
 
-            for (let i = 0; i < 6 && remaining > 0; i++) {
-                const dayIndex = (currentDayIndex + i) % 6;
-                const day = daysOfWeek[dayIndex];
+            // Intentar asignar en cada día desde hoy hasta el día del examen
+            for (let offset = 0; offset < 6 && remainingHours > 0.1; offset++) {
+                const dayIndex = (currentDayIndex + offset) % 6;
+                const dayCode = daysOfWeek[dayIndex];
 
-                // Calcular tiempo disponible ese día (simplificado)
-                let available = endHour - startHour - restHours/6 - transportHours - mealHours;
-                if (i < daysToUse) available *= 1.2; // prioridad a días cercanos
+                // Solo asignar si este día está dentro del rango del examen
+                if (offset >= daysAvailable) break;
 
-                const assign = Math.min(remaining, Math.max(1, available/2));
-                if (assign > 0.1) {
-                    schedule[day].push({
-                        start: startHour + Math.random() * 2,
-                        end: startHour + Math.random() * 2 + assign,
+                // Horas a asignar este día (más si es urgente, menos si es lejano)
+                const priorityFactor = offset < 2 ? 1.3 : offset < 4 ? 1.1 : 0.9;
+                let hoursToday = hoursPerDayTarget * priorityFactor;
+
+                // No asignar más de lo que queda ni más de 4h por día (realista)
+                hoursToday = Math.min(hoursToday, remainingHours, 4.0);
+
+                if (hoursToday < 0.5) continue; // no poner bloques ridículos
+
+                // Elegir horario realista (mañana o tarde, evitando clases/transporte)
+                const possibleStarts = [];
+                const dayOccupied = [
+                    ...classSchedules[dayCode],
+                    ...transportRanges,
+                    ...mealRanges
+                ];
+
+                // Generar huecos libres
+                let cursor = startHour;
+                for (const occ of dayOccupied.sort((a,b) => a.start - b.start)) {
+                    if (cursor < occ.start - 0.5) {
+                        possibleStarts.push(cursor + 0.5);
+                    }
+                    cursor = Math.max(cursor, occ.end);
+                }
+                if (cursor < endHour - 1) possibleStarts.push(cursor + 0.5);
+
+                // Si no hay hueco, usar horario por defecto
+                if (possibleStarts.length === 0) {
+                    possibleStarts.push(startHour + 1); // mañana
+                    possibleStarts.push(endHour - hoursToday - 1); // tarde
+                }
+
+                const start = possibleStarts[Math.floor(Math.random() * possibleStarts.length)];
+                const end = Math.min(start + hoursToday, endHour - 0.5);
+
+                if (end - start > 0.5) {
+                    schedule[dayCode].push({
+                        start,
+                        end,
                         exam: exam.name,
                         color: exam.color
                     });
-                    remaining -= assign;
+                    remainingHours -= (end - start);
                 }
             }
+
+            // Si sobró algo (por redondeo), ponerlo el último día útil
+            if (remainingHours > 0.5) {
+                const dayIndex = (currentDayIndex + daysAvailable - 1) % 6;
+                const dayCode = daysOfWeek[dayIndex];
+                schedule[dayCode].push({
+                    start: endHour - remainingHours - 0.5,
+                    end: endHour - 0.5,
+                    exam: exam.name + " (extra)",
+                    color: exam.color
+                });
+            }
         }
+
+        // Consolidar bloques contiguos del mismo examen
+        daysOfWeek.forEach(day => {
+            if (!schedule[day].length) return;
+            schedule[day].sort((a,b) => a.start - b.start);
+            const merged = [];
+            let current = null;
+            for (const block of schedule[day]) {
+                if (!current) {
+                    current = { ...block };
+                } else if (current.exam === block.exam && block.start <= current.end + 0.1) {
+                    current.end = Math.max(current.end, block.end);
+                } else {
+                    merged.push(current);
+                    current = { ...block };
+                }
+            }
+            if (current) merged.push(current);
+            schedule[day] = merged;
+        });
 
         // --- Mostrar resultados ---
         const results = document.getElementById("results");
