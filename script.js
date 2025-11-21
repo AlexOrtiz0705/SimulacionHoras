@@ -15,6 +15,31 @@ const examColors = [
 // Días de la semana (6 días: LU..SA)
 const daysOfWeek = ["LU", "MA", "MI", "JU", "VI", "SA"]
 
+function obtenerExamenes() {
+    const numExams = parseInt(document.getElementById("numExams").value) || 0;
+    const examenes = [];
+
+    for (let i = 0; i < numExams; i++) {
+        const nombre = document.getElementById(`examName${i}`).value.trim();
+        const dias = parseInt(document.getElementById(`examDays${i}`).value);
+        const dificultad = parseInt(document.getElementById(`examDifficulty${i}`).value);
+
+        if (!nombre || isNaN(dias) || isNaN(dificultad)) {
+            alert(`Faltan datos en el examen ${i + 1}`);
+            return null;
+        }
+
+        examenes.push({
+            nombre,
+            diasRestantes: dias,
+            dificultad, // 1, 2 o 3
+            color: examColors[i % examColors.length]
+        });
+    }
+
+    return examenes;
+}
+
 // Generar campos de exámenes
 document.getElementById("generateExamsBtn").addEventListener("click", () => {
   const numExams = Number.parseInt(document.getElementById("numExams").value) || 0
