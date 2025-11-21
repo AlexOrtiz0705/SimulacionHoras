@@ -90,13 +90,9 @@ document.getElementById("generateExamsBtn").addEventListener("click", () => {
 
 // Procesar el formulario
 document.getElementById("studyForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    generateSchedule();
-    document.getElementById("contenedor").classList.add("hidden");
-    document.getElementById("results").classList.remove("hidden");
-    document.getElementById("container2").classList.add("hidden");
-    document.getElementById("results").scrollIntoView({ behavior: "smooth" });
-});
+  e.preventDefault()
+  generateSchedule()
+})
 
 // Parsear horarios tipo "8-10,14-16" -> [{start:8,end:10},...]
 function parseTimeRanges(scheduleStr) {
@@ -338,21 +334,10 @@ function generateSchedule() {
   const currentDay = document.getElementById("currentDay").value || "LU"
   const startTime = document.getElementById("startTime").value || "07:00"
   const endTime = document.getElementById("endTime").value || "22:00"
-  // Parsear rangos tipo "2-3" → promedio
-  const parseRange = (id, def) => {
-      const val = document.getElementById(id)?.value.trim();
-      if (!val) return def;
-      const m = val.match(/(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)/);
-      return m ? (parseFloat(m[1]) + parseFloat(m[2])) / 2 : parseFloat(val) || def;
-  };
-
   const numExams = Number.parseInt(document.getElementById("numExams").value) || 0
-  
+
   const startHour = Number.parseFloat(startTime.split(":")[0])
   const endHour = Number.parseFloat(endTime.split(":")[0])
-  const transportHours = parseRangeToAvg("transportHoursRange", 2);
-  const mealHours     = parseRangeToAvg("mealHoursRange", 1.5);
-  const restHours     = parseRangeToAvg("restHoursRange", 7);
 
   // horarios de clases por dia
   const classSchedules = {}
