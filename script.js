@@ -26,19 +26,36 @@ document.getElementById("generateExamsBtn").addEventListener("click", () => {
     examDiv.className = "exam-item"
     examDiv.style.borderLeftColor = examColors[i % examColors.length]
     examDiv.innerHTML = `
-            <h3>Examen ${i + 1}</h3>
+           <h3 style="color: ${examColors[i % examColors.length]};">
+                Examen ${i + 1}
+            </h3>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Nombre del examen:</label>
-                    <input type="text" id="examName${i}" placeholder="ej: Matemáticas" required>
+                    <label for="examName${i}">Nombre del examen:</label>
+                    <input 
+                        type="text" 
+                        id="examName${i}" 
+                        placeholder="ej: Cálculo II" 
+                        required 
+                        autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label>Días restantes:</label>
-                    <input type="number" id="examDays${i}" min="1" max="365" placeholder="7" required>
+                    <label for="examDays${i}">Días restantes hasta el examen:</label>
+                    <input 
+                        type="number" 
+                        id="examDays${i}" 
+                        min="1" 
+                        max="365" 
+                        value="14" 
+                        required>
                 </div>
                 <div class="form-group">
-                    <label>Dificultad (1=fácil, 3=difícil):</label>
-                    <input type="number" id="examDifficulty${i}" min="1" max="3" value="2" required>
+                    <label for="examDifficulty${i}">Dificultad (1=fácil, 3=difícil):</label>
+                    <select id="examDifficulty${i}" required>
+                        <option value="1">1 - Fácil</option>
+                        <option value="2" selected>2 - Media</option>
+                        <option value="3">3 - Difícil</option>
+                    </select>
                 </div>
             </div>
         `
